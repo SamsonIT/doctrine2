@@ -384,7 +384,11 @@ class BasicEntityPersister
                 $targetMapping = $this->_em->getClassMetadata($this->_class->associationMappings[$idField]['targetEntity']);
                 $where[] = $this->_class->associationMappings[$idField]['joinColumns'][0]['name'];
                 $params[] = $id[$idField];
-                $types[] = $targetMapping->fieldMappings[$targetMapping->identifier[0]]['type'];
+                if (isset($targetMapping->fieldMappings[$targetMapping->identifier[0]]['type'])) {
+                    $types[] = $targetMapping->fieldMappings[$targetMapping->identifier[0]]['type'];
+                } else {
+                    $types[] = $targetMapping->associationMappings[$targetMapping->identifier[0]]['type'];
+                }
             } else {
                 $where[] = $this->quoteStrategy->getColumnName($idField, $this->_class, $this->_platform);
                 $params[] = $id[$idField];
